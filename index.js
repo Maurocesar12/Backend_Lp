@@ -9,8 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Configuração do CORS (APENAS UMA VEZ, no início)
+// Por isso:
 app.use(cors({
-  origin: "http://localhost:8080/" // Substitua pelo domínio do seu front (Hostinger)
+  origin: ["http://localhost:5173", "http://localhost:8880", "https://seusite.com"],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
 }));
 
 app.use(express.json());
