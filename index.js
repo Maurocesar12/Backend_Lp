@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 8080;
 
 // Configuração do CORS (APENAS UMA VEZ, no início)
 app.use(cors({
-  origin: "https://seusite.com" // Substitua pelo domínio do seu front (Hostinger)
+  origin: "http://localhost:8080/" // Substitua pelo domínio do seu front (Hostinger)
 }));
 
 app.use(express.json());
