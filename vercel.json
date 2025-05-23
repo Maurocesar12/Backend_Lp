@@ -1,15 +1,9 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "api/trello.js",
-      "use": "@vercel/node"
-    }
+    { "src": "api/trello.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/api/trello",
-      "dest": "api/trello.js"
-    }
+    { "src": "/api/trello", "dest": "api/trello.js" }
   ]
 }
