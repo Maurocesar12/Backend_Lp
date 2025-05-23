@@ -1,18 +1,19 @@
-import fetch from 'node-fetch';
-
 export default async function handler(req, res) {
+  // CORS para qualquer origem (ou substitua pelo seu domínio)
   res.setHeader("Access-Control-Allow-Origin", "https://glendacarvalho.com.br");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  // ✅ Trata pré-requisição (preflight)
   if (req.method === "OPTIONS") {
-    return res.status(200).end(); // resposta para preflight
+    return res.status(200).end();
   }
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
 
+  // 🔐 Recebe os dados
   const { name, email, subject, message } = req.body;
 
   const cardName = `Contato: ${name}`;
