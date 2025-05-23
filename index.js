@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8080;
 // Configuração do CORS (APENAS UMA VEZ, no início)
 // Por isso:
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:8880", "https://seusite.com"],
+  origin: ["https://glendacarvalho.com.br/"],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"]
 }));
