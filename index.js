@@ -1,25 +1,18 @@
-import express from "express";
-import cors from "cors";
-import fetch from "node-fetch";
-import dotenv from "dotenv";
+import fetch from 'node-fetch';
 
-dotenv.config();
+export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "https://glendacarvalho.com.br");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-const app = express();
-const PORT = process.env.PORT || 8080;
+  if (req.method === "OPTIONS") {
+    return res.status(200).end(); // resposta para preflight
+  }
 
-// Configuração do CORS (APENAS UMA VEZ, no início)
-// Por isso:
-app.use(cors({
-  origin: ["https://glendacarvalho.com.br/"],
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type"]
-}));
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método não permitido" });
+  }
 
-app.use(express.json());
-
-// Rota POST para o Trello
-app.post("/api/trello", async (req, res) => {
   const { name, email, subject, message } = req.body;
 
   const cardName = `Contato: ${name}`;
@@ -31,27 +24,17 @@ app.post("/api/trello", async (req, res) => {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: cardName, desc: cardDesc })
+      body: JSON.stringify({ name: cardName, desc: cardDesc }),
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Erro da API do Trello:", data);
-      return res.status(500).json({ error: "Erro ao criar card no Trello" });
+      return res.status(500).json({ error: "Erro no Trello", details: data });
     }
 
-    res.status(200).json({ message: "Card criado com sucesso" });
+    return res.status(200).json({ message: "Card criado com sucesso!" });
   } catch (error) {
-    console.error("Erro ao criar card:", error);
-    res.status(500).json({ error: "Erro interno no servidor" });
+    return res.status(500).json({ error: "Erro interno", details: error.message });
   }
-});
-
-// Rota de teste (OPCIONAL)
-app.get("/api/test", (req, res) => {
-  res.status(200).json({ status: "Backend online!" });
-});
-
-// Exportação obrigatória para a Vercel
-export default app;
+}
