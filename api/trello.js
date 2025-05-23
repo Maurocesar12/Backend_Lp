@@ -1,17 +1,10 @@
-import fetch from 'node-fetch';
-
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "https://glendacarvalho.com.br");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Método não permitido" });
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Método não permitido" });
 
   const { name, email, subject, message } = req.body;
 
@@ -30,11 +23,13 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({ error: "Erro no Trello", details: data });
+      console.error("Erro do Trello:", data); // 👈 aqui você vê o erro real nos logs da Vercel
+      return res.status(500).json({ error: "Erro ao criar card no Trello", details: data });
     }
 
     return res.status(200).json({ message: "Card criado com sucesso!" });
   } catch (error) {
+    console.error("Erro interno:", error); // 👈 erro geral
     return res.status(500).json({ error: "Erro interno", details: error.message });
   }
 }
